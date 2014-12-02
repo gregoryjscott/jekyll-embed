@@ -1,16 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'jekyll/api/version'
+require 'jekyll/embedd/version'
 
 Gem::Specification.new do |spec|
 
-  spec.name          = 'jekyll-api'
-  spec.version       = Jekyll::Api::VERSION
+  spec.name          = 'jekyll-embed'
+  spec.version       = Jekyll::Embed::VERSION
   spec.authors       = ['Greg Scott']
   spec.email         = ['i@gregoryjscott.com']
-  spec.summary       = %q{Create APIs using Jekyll page data.}
-  spec.homepage      = 'https://github.com/gregoryjscott/jekyll-api'
+  spec.summary       = %q{Uses hypermedia to combine Jekyll page data.}
+  spec.homepage      = 'https://github.com/gregoryjscott/jekyll-embed'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")

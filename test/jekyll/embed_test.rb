@@ -1,7 +1,7 @@
-require 'jekyll/api'
+require 'jekyll/embed'
 require 'minitest/autorun'
 
-describe 'Jekyll::API' do
+describe 'Jekyll::Embed' do
 
   let(:config) do
     Jekyll.configuration({

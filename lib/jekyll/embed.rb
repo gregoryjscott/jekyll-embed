@@ -1,8 +1,8 @@
 require 'jekyll'
-require 'jekyll/api/version'
+require 'jekyll/embed/version'
 
 module Jekyll
-  module Api
+  module Embed
     # Your code goes here...
   end
 end

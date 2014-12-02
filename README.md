@@ -1,37 +1,149 @@
-# Jekyll::Api
+# Jekyll::Embed
 
-Create APIs using Jekyll page data.
+Uses hypermedia to combine Jekyll page data.
 
 ## Installation
 
-Follow [Jekyll's instructions for installing Jekyll plugins](http://jekyllrb.com/docs/plugins/#installing-a-plugin). The **Jekyll::API** plugin is available from the `jekyll-api` gem.
+Follow [Jekyll's instructions for installing Jekyll plugins](http://jekyllrb.com/docs/plugins/#installing-a-plugin). The **Jekyll::Embed** plugin is available from the `jekyll-embed` gem.
 
 ## Usage
 
-1. Define data as front-matter in your Markdown Jekyll pages.
-2. Enjoy the generated data.json files.
+**Jekyll::Embed** relies on two special fields in the Jekyll page front matter to do its thing - `_links` and `_embedded`. These concepts come from the Hypermedia Application Language (HAL) media type specification.
 
-For example, the **Jekyll::API** plugin will generate a `people/jill/data.json` file
+* `_links` container of links to other resources
+* `_embedded` container for other resources
 
-```json
-{
-  "name": "Jill"
-}
-```
+For the purposes of this **Jekyll::Embed** plugin, a Jekyll page and resource can be considered the same thing.
 
- using the Jekyll page `/people/jill.md`.
+### Steps
+
+1. Declare which resources should embed which other resources by setting the page's default `embed` values in the `config.yml` file.
+
+  The following tells **Jekyll::Embed** to embed `friends` resources in all pages found in `people/`.
+
+  ```yaml
+  # _config.yml
+  defaults:
+    - scope:
+        path: "people"
+        type: "pages"
+      values:
+        embed: [friends]
+  ```
+
+2. Define `_links` to other resources in each Jekyll page's front matter.
+
+  ```yaml
+  # people/jill.md (front matter only)
+  _links:
+    friends:
+      - title: Bob
+        url: /people/bob
+
+      - title: Jack
+        url: /people/jack
+
+  name: Jill
+  age: 6
+  ```
+
+  ```yaml
+  # people/jack.md (front matter only)
+  _links:
+    friends:
+      - title: Bob
+        url: /people/bob
+
+      - title: Jill
+        url: /people/jill
+
+  name: Jack
+  age: 7
+  ```
+
+### Result
+
+**Jekyll::Embed** embeds each resource's `friends` into `_embedded`.
+
 ```yaml
----
+# people/jill.md (front matter only)
+_links:
+  friends:
+    - title: Bob
+      url: /people/bob
+
+    - title: Jack
+      url: /people/jack
+
 name: Jill
----
-Hi, my name is {{ page.name }}
+age: 6
+
+_embedded:
+  friends:
+    - _links:
+        friends:
+          - title: Jill
+            url: /people/jill
+
+          - title: Jack
+            url: /people/jack
+
+      name: Bob
+      age: 5
+
+    - _links:
+        friends:
+          - title: Bob
+            url: /people/bob
+
+          - title: Jill
+            url: /people/jill
+
+      name: Jack
+      age: 7
 ```
 
-If you set `permalink: pretty` in your `_config.yml`, the resulting HTTP endpoints will be `/people/jill` (HTML) and `/people/jill/data.json` (JSON).
+```yaml
+# people/jack.md (front matter only)
+_links:
+  friends:
+    - title: Bob
+      url: /people/bob
+
+    - title: Jill
+      url: /people/jill
+
+name: Jack
+age: 7
+
+_embedded:
+  friends:
+    - _links:
+        friends:
+          - title: Jill
+           url: /people/jill
+
+          - title: Jack
+           url: /people/jack
+
+      name: Bob
+      age: 5
+
+    - _links:
+        friends:
+          - title: Bob
+            url: /people/bob
+
+          - title: Jack
+            url: /people/jack
+
+      name: Jill
+      age: 6
+```
 
 ## Contributing
 
-1. Fork it (https://github.com/gregoryjscott/jekyll-api/fork).
+1. Fork it (https://github.com/gregoryjscott/jekyll-embed/fork).
 2. Create your feature branch (`git checkout -b my-new-feature`).
 3. Commit your changes (`git commit -am 'Add some feature'`).
 4. Push to the branch (`git push origin my-new-feature`).

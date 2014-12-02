@@ -10,10 +10,12 @@ Follow [Jekyll's instructions for installing Jekyll plugins](http://jekyllrb.com
 
 **Jekyll::Embed** relies on two special fields in the Jekyll page front matter to do its thing - `_links` and `_embedded`. These concepts come from the Hypermedia Application Language (HAL) media type specification.
 
-* `_links` container of links to other resources
-* `_embedded` container for other resources
+* `_links` is a container of links to other resources
+* `_embedded` is a container for other resources
 
-For the purposes of this **Jekyll::Embed** plugin, a Jekyll page and resource can be considered the same thing.
+**Jekyll::Embed** can use linked resources to make embedded resources.
+
+For the purposes of this plugin, a Jekyll page and resource can be considered the same thing.
 
 ### Steps
 

@@ -17,7 +17,45 @@ describe 'Jekyll::Embed' do
     site.process
   end
 
-  it 'does nothing' do
+  it 'embeds linked resources' do
+    assert_friends('Bob', ['Jill', 'Jack'])
+    assert_friends('Jill', ['Bob', 'Jack'])
+    assert_friends('Jack', ['Bob', 'Jill'])
+  end
+
+  it 'preserves embedded resources original state' do
+    assert_friends_state('Bob', ['Jill', 'Jack'])
+    assert_friends_state('Jill', ['Bob', 'Jack'])
+    assert_friends_state('Jack', ['Bob', 'Jill'])
+  end
+
+  def assert_friends(name, expected_friends)
+    path = File.join('people', "#{name.downcase}.md")
+    person = site.pages.detect { |page| page.path == path }
+    friends = person.data['_embedded']['friends']
+
+    assert_equal expected_friends.count, friends.count
+    expected_friends.each do |expected|
+      assert friend?(friends, expected), "#{name} has the wrong friends."
+    end
+  end
+
+  def assert_friends_state(name, friends)
+    path = File.join('people', "#{name.downcase}.md")
+    person = site.pages.detect { |page| page.path == path }
+
+    friends.each do |friend|
+      state = find_friend(person.data['_embedded']['friends'], friend)
+      assert_nil state['_embedded']
+    end
+  end
+
+  def friend?(friends, name)
+    !find_friend(friends, name).nil?
+  end
+
+  def find_friend(friends, name)
+    friends.detect { |friend| friend['title'] == name }
   end
 
 end

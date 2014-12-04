@@ -26,7 +26,7 @@ Follow [Jekyll's instructions for installing Jekyll plugins](http://jekyllrb.com
   ```yaml
   # people/jill.md (front matter only)
 
-  name: Jill
+  title: Jill
   age: 6
   _links:
     friends:
@@ -44,7 +44,7 @@ Follow [Jekyll's instructions for installing Jekyll plugins](http://jekyllrb.com
   ```yaml
   # people/jill.md (front matter only)
 
-  name: Jill
+  title: Jill
   age: 6
   _links:
     friends:
@@ -56,7 +56,7 @@ Follow [Jekyll's instructions for installing Jekyll plugins](http://jekyllrb.com
 
   _embedded:
     friends:
-      - name: Bob
+      - title: Bob
         age: 5
         _links:
           friends:
@@ -66,7 +66,7 @@ Follow [Jekyll's instructions for installing Jekyll plugins](http://jekyllrb.com
             - title: Jack
               url: /people/jack
 
-      - name: Jack
+      - title: Jack
         age: 7
         _links:
           friends:

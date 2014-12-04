@@ -1,5 +1,5 @@
 ---
-name: Jill
+title: Jill
 age: 6
 
 _links:

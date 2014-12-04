@@ -1,5 +1,5 @@
 ---
-name: Jack
+title: Jack
 age: 7
 
 _links:

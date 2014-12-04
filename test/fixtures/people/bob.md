@@ -1,5 +1,5 @@
 ---
-name: Bob
+title: Bob
 age: 5
 
 _links:

@@ -36,18 +36,15 @@ describe 'Jekyll::Embed' do
 
     assert_equal expected_friends.count, friends.count
     expected_friends.each do |expected|
-      assert friend?(friends, expected), "#{name} has the wrong friends."
+      assert friend?(friends, expected), "#{name} has the wrong friends. Expected #{expected}."
     end
   end
 
   def assert_friends_state(name, friends)
     path = File.join('people', "#{name.downcase}.md")
-    person = site.pages.detect { |page| page.path == path }
+    page = site.pages.detect { |page| page.path == path }
 
-    friends.each do |friend|
-      state = find_friend(person.data['_embedded']['friends'], friend)
-      assert_nil state['_embedded']
-    end
+    assert embedded_friends_dont_have_embedded(page, friends)
   end
 
   def friend?(friends, name)
@@ -56,6 +53,13 @@ describe 'Jekyll::Embed' do
 
   def find_friend(friends, name)
     friends.detect { |friend| friend['title'] == name }
+  end
+
+  def embedded_friends_dont_have_embedded(page, friends)
+    friends.each do |friend|
+      state = find_friend(page.data['_embedded']['friends'], friend)
+      assert_nil state['_embedded']
+    end
   end
 
 end

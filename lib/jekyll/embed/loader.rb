@@ -4,29 +4,51 @@ module Jekyll
 
       def generate(site)
         @site = site
-        Dir.chdir(@site.source) { embed_resources }
+        Dir.chdir(@site.source) { embed }
       end
 
-      def embed_resources
-        bob = @site.pages.detect { |page| page.path == 'people/bob.md'}
-        jill = @site.pages.detect { |page| page.path == 'people/jill.md'}
-        jack = @site.pages.detect { |page| page.path == 'people/jack.md'}
-
-        bob_data = clone(bob.data)
-        jill_data = clone(jill.data)
-        jack_data = clone(jack.data)
+      def embed
+        capture_resources
 
         @site.pages.each do |page|
-          page.data['_embedded'] = { }
-          case page.data['title']
-          when 'Bob'
-            page.data['_embedded']['friends'] = [jill_data, jack_data]
-          when 'Jill'
-            page.data['_embedded']['friends'] = [bob_data, jack_data]
-          when 'Jack'
-            page.data['_embedded']['friends'] = [bob_data, jill_data]
+          embed_linked_resources(page)
+        end
+      end
+
+      def embed_linked_resources(page)
+        links = page.data['_links']
+        return if links.nil?
+
+        links.keys.each do |key|
+          candidates = links[key]
+          if candidates.kind_of?(Array)
+            candidates.each do |candidate|
+              resource = find_resource(candidate['url'])
+              embed_resource(page, key, resource) unless resource.nil?
+            end
           end
         end
+      end
+
+      def embed_resource(page, key, resource)
+        page.data['_embedded'] = { } if page.data['_embedded'].nil?
+        page.data['_embedded'][key] = [] if page.data['_embedded'][key].nil?
+        page.data['_embedded'][key] << resource['data']
+      end
+
+      def capture_resources
+        @all_resources = []
+        @site.pages.each do |page|
+          resource = {
+            'url' => page.url,
+            'data' => clone(page.data)
+          }
+          @all_resources << resource
+        end
+      end
+
+      def find_resource(url)
+        @all_resources.detect { |resource| url == resource['url'] }
       end
 
       def clone(resource)

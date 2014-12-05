@@ -5,8 +5,8 @@ age: 5
 _links:
   friends:
     - title: Jill
-      url: /people/jill
+      url: /people/jill/
 
     - title: Jack
-      url: /people/jack
+      url: /people/jack/
 ---

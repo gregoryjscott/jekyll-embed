@@ -17,10 +17,15 @@ describe 'Jekyll::Embed' do
     site.process
   end
 
+  it 'embeds linked resource' do
+    assert_has_brother('Bob', 'Jack')
+    assert_has_brother('Jack', 'Bob')
+  end
+
   it 'embeds linked resources' do
-    assert_friends('Bob', ['Jill', 'Jack'])
-    assert_friends('Jill', ['Bob', 'Jack'])
-    assert_friends('Jack', ['Bob', 'Jill'])
+    assert_has_friends('Bob', ['Jill', 'Jack'])
+    assert_has_friends('Jill', ['Bob', 'Jack'])
+    assert_has_friends('Jack', ['Bob', 'Jill'])
   end
 
   it 'preserves embedded resources original state' do
@@ -29,7 +34,13 @@ describe 'Jekyll::Embed' do
     assert_friends_state('Jack', ['Bob', 'Jill'])
   end
 
-  def assert_friends(name, expected_friends)
+  def assert_has_brother(name, expected_brother)
+    embedded_brother = embedded(name)['brother']
+    error = "#{name} has wrong brother. Expected #{expected_brother}."
+    assert brother?(embedded_brother, expected_brother), error
+  end
+
+  def assert_has_friends(name, expected_friends)
     path = File.join('people', "#{name.downcase}.md")
     person = site.pages.detect { |page| page.path == path }
     friends = person.data['_embedded']['friends']
@@ -45,6 +56,16 @@ describe 'Jekyll::Embed' do
     page = site.pages.detect { |page| page.path == path }
 
     assert embedded_friends_dont_have_embedded(page, friends)
+  end
+
+  def embedded(name)
+    path = File.join('people', "#{name.downcase}.md")
+    page = site.pages.detect { |page| page.path == path }
+    page.data['_embedded']
+  end
+
+  def brother?(brother, name)
+    brother['title'] == name
   end
 
   def friend?(friends, name)

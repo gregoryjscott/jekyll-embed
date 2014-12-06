@@ -31,10 +31,10 @@ Follow [Jekyll's instructions for installing Jekyll plugins](http://jekyllrb.com
   _links:
     friends:
       - title: Bob
-        url: /people/bob
+        href: /people/bob
 
       - title: Jack
-        url: /people/jack
+        href: /people/jack
   ```
 
 2. Use the embedded resources in the Jekyll pages.
@@ -49,10 +49,10 @@ Follow [Jekyll's instructions for installing Jekyll plugins](http://jekyllrb.com
   _links:
     friends:
       - title: Bob
-        url: /people/bob
+        href: /people/bob
 
       - title: Jack
-        url: /people/jack
+        href: /people/jack
 
   _embedded:
     friends:
@@ -61,20 +61,14 @@ Follow [Jekyll's instructions for installing Jekyll plugins](http://jekyllrb.com
         _links:
           friends:
             - title: Jill
-              url: /people/jill
-
-            - title: Jack
-              url: /people/jack
+              href: /people/jill
 
       - title: Jack
         age: 7
         _links:
           friends:
-            - title: Bob
-              url: /people/bob
-
             - title: Jill
-              url: /people/jill
+              href: /people/jill
   ```
 
 ## Contributing

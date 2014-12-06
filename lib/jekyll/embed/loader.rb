@@ -35,13 +35,13 @@ module Jekyll
         embedded[key] = [] if embedded[key].nil?
 
         link_objects.each do |link_object|
-          resource = find_resource(link_object['url'])
+          resource = find_resource(link_object['href'])
           embedded[key] << resource['data']
         end
       end
 
       def embed_single(embedded, key, link_object)
-        resource = find_resource(link_object['url'])
+        resource = find_resource(link_object['href'])
         embedded[key] = resource['data']
       end
 
@@ -54,14 +54,14 @@ module Jekyll
         @resources = []
         @site.pages.each do |page|
           @resources << {
-            'url' => page.url,
+            'href' => page.url,
             'data' => clone(page.data)
           }
         end
       end
 
       def find_resource(url)
-        @resources.detect { |resource| url == resource['url'] }
+        @resources.detect { |resource| url == resource['href'] }
       end
 
       def clone(resource)

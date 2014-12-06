@@ -5,9 +5,9 @@ age: 7
 _links:
   brother:
     title: Bob
-    url: /people/bob/
+    href: /people/bob/
 
   friends:
     - title: Jill
-      url: /people/jill/
+      href: /people/jill/
 ---

@@ -5,9 +5,9 @@ age: 5
 _links:
   brother:
     title: Jack
-    url: /people/jack/
+    href: /people/jack/
 
   friends:
     - title: Jill
-      url: /people/jill/
+      href: /people/jill/
 ---

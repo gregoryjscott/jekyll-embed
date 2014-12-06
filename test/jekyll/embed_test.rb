@@ -22,46 +22,50 @@ describe 'Jekyll::Embed' do
     assert_has_brother('Jack', 'Bob')
   end
 
-  it 'embeds linked resources' do
+  it 'embeds linked resource array' do
     assert_has_friends('Bob', ['Jill'])
     assert_has_friends('Jill', ['Bob', 'Jack'])
     assert_has_friends('Jack', ['Jill'])
   end
 
-  it 'preserves embedded resources original state' do
-    assert_friends_state('Bob', ['Jill'])
-    assert_friends_state('Jill', ['Bob', 'Jack'])
-    assert_friends_state('Jack', ['Jill'])
+  it 'does not embed previously embedded resources' do
+    check_embedded_for_embedded('Bob')
+    check_embedded_for_embedded('Jill')
+    check_embedded_for_embedded('Jack')
   end
 
   def assert_has_brother(name, expected_brother)
-    embedded_brother = embedded(name)['brother']
-    error = "#{name} has wrong brother. Expected #{expected_brother}."
-    assert brother?(embedded_brother, expected_brother), error
+    embedded_brother = get_embedded(name)['brother']
+
+    failure = "#{name} has wrong brother. Expected #{expected_brother}."
+    assert brother?(embedded_brother, expected_brother), failure
   end
 
   def assert_has_friends(name, expected_friends)
-    path = File.join('people', "#{name.downcase}.md")
-    person = site.pages.detect { |page| page.path == path }
-    friends = person.data['_embedded']['friends']
+    friends = get_embedded(name)['friends']
 
-    wrong_count = "#{name} should have #{expected_friends.count} friends."
-    assert_equal expected_friends.count, friends.count, wrong_count
+    failure = "#{name} should have #{expected_friends.count} friends."
+    assert_equal expected_friends.count, friends.count, failure
 
     expected_friends.each do |expected|
-      wrong_friends = "#{name} has the wrong friends. Expected #{expected}."
-      assert friend?(friends, expected), wrong_friends
+      failure = "#{name} has the wrong friends. Expected #{expected}."
+      assert friend?(friends, expected), failure
     end
   end
 
-  def assert_friends_state(name, friends)
-    path = File.join('people', "#{name.downcase}.md")
-    page = site.pages.detect { |page| page.path == path }
+  def check_embedded_for_embedded(name)
+    embedded = get_embedded(name)
 
-    assert embedded_friends_dont_have_embedded(page, friends)
+    brother = embedded['brother']
+    failure = 'Embedded resources should not contain other embedded resources.'
+    assert_nil brother['_embedded'], failure unless brother.nil?
+
+    embedded['friends'].each do |friend|
+      assert_nil friend['_embedded'], failure
+    end
   end
 
-  def embedded(name)
+  def get_embedded(name)
     path = File.join('people', "#{name.downcase}.md")
     page = site.pages.detect { |page| page.path == path }
     page.data['_embedded']
@@ -77,13 +81,6 @@ describe 'Jekyll::Embed' do
 
   def find_friend(friends, name)
     friends.detect { |friend| friend['title'] == name }
-  end
-
-  def embedded_friends_dont_have_embedded(page, friends)
-    friends.each do |friend|
-      state = find_friend(page.data['_embedded']['friends'], friend)
-      assert_nil state['_embedded']
-    end
   end
 
 end

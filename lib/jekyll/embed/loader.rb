@@ -11,52 +11,57 @@ module Jekyll
         capture_resources
 
         @site.pages.each do |page|
-          embed_linked_resources(page)
+          embed_resources(page)
         end
       end
 
-      def embed_linked_resources(page)
+      def embed_resources(page)
         links = page.data['_links']
         return if links.nil?
 
+        embedded = get_embedded(page)
+
         links.keys.each do |key|
-          linked_resources = links[key]
-          if linked_resources.kind_of?(Array)
-            linked_resources.each do |linked_resource|
-              resource = find_resource(linked_resource['url'])
-              embed_resource_array(page, key, resource) unless resource.nil?
-            end
+          link_object = links[key]
+          if link_object.kind_of?(Array)
+            embed_many(embedded, key, link_object)
           else
-            resource = find_resource(linked_resources['url'])
-            embed_resource(page, key, resource) unless resource.nil?
+            embed_single(embedded, key, link_object)
           end
         end
       end
 
-      def embed_resource_array(page, key, resource)
-        page.data['_embedded'] = { } if page.data['_embedded'].nil?
-        page.data['_embedded'][key] = [] if page.data['_embedded'][key].nil?
-        page.data['_embedded'][key] << resource['data']
+      def embed_many(embedded, key, link_objects)
+        embedded[key] = [] if embedded[key].nil?
+
+        link_objects.each do |link_object|
+          resource = find_resource(link_object['url'])
+          embedded[key] << resource['data']
+        end
       end
 
-      def embed_resource(page, key, resource)
+      def embed_single(embedded, key, link_object)
+        resource = find_resource(link_object['url'])
+        embedded[key] = resource['data']
+      end
+
+      def get_embedded(page)
         page.data['_embedded'] = { } if page.data['_embedded'].nil?
-        page.data['_embedded'][key] = resource['data']
+        page.data['_embedded']
       end
 
       def capture_resources
-        @all_resources = []
+        @resources = []
         @site.pages.each do |page|
-          resource = {
+          @resources << {
             'url' => page.url,
             'data' => clone(page.data)
           }
-          @all_resources << resource
         end
       end
 
       def find_resource(url)
-        @all_resources.detect { |resource| url == resource['url'] }
+        @resources.detect { |resource| url == resource['url'] }
       end
 
       def clone(resource)

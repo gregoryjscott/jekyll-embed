@@ -8,9 +8,6 @@ _links:
     url: /people/bob/
 
   friends:
-    - title: Bob
-      url: /people/bob/
-
     - title: Jill
       url: /people/jill/
 ---

@@ -23,15 +23,15 @@ describe 'Jekyll::Embed' do
   end
 
   it 'embeds linked resources' do
-    assert_has_friends('Bob', ['Jill', 'Jack'])
+    assert_has_friends('Bob', ['Jill'])
     assert_has_friends('Jill', ['Bob', 'Jack'])
-    assert_has_friends('Jack', ['Bob', 'Jill'])
+    assert_has_friends('Jack', ['Jill'])
   end
 
   it 'preserves embedded resources original state' do
-    assert_friends_state('Bob', ['Jill', 'Jack'])
+    assert_friends_state('Bob', ['Jill'])
     assert_friends_state('Jill', ['Bob', 'Jack'])
-    assert_friends_state('Jack', ['Bob', 'Jill'])
+    assert_friends_state('Jack', ['Jill'])
   end
 
   def assert_has_brother(name, expected_brother)
@@ -45,9 +45,12 @@ describe 'Jekyll::Embed' do
     person = site.pages.detect { |page| page.path == path }
     friends = person.data['_embedded']['friends']
 
-    assert_equal expected_friends.count, friends.count
+    wrong_count = "#{name} should have #{expected_friends.count} friends."
+    assert_equal expected_friends.count, friends.count, wrong_count
+
     expected_friends.each do |expected|
-      assert friend?(friends, expected), "#{name} has the wrong friends. Expected #{expected}."
+      wrong_friends = "#{name} has the wrong friends. Expected #{expected}."
+      assert friend?(friends, expected), wrong_friends
     end
   end
 

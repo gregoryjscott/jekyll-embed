@@ -17,12 +17,12 @@ describe 'Jekyll::Embed' do
     site.process
   end
 
-  it 'embeds linked resource' do
+  it 'embeds local linked resource' do
     assert_has_brother('Bob', 'Jack')
     assert_has_brother('Jack', 'Bob')
   end
 
-  it 'embeds linked resource array' do
+  it 'embeds local linked resource array' do
     assert_has_friends('Bob', ['Jill'])
     assert_has_friends('Jill', ['Bob', 'Jack'])
     assert_has_friends('Jack', ['Jill'])

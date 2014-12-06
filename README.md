@@ -8,68 +8,67 @@ Follow [Jekyll's instructions for installing Jekyll plugins](http://jekyllrb.com
 
 ## Usage
 
-**Jekyll::Embed** relies on two special fields in the Jekyll page front matter to do its thing - `_links` and `_embedded`. These concepts come from the Hypermedia Application Language (HAL) media type specification.
+**Jekyll::Embed** relies on two special fields in the Jekyll page front matter to do its thing - `_links` and `_embedded`. These concepts come from the [Hypermedia Application Language (HAL)](http://stateless.co/hal_specification.html) media type specification.
 
 * `_links` is a container of links to other resources
 * `_embedded` is a container of other resources
 
-**Jekyll::Embed** uses `_links` to populate `_embedded`.
+**Jekyll::Embed** finds resources using `_links` and puts them in `_embedded`.
 
-> For the purposes of this plugin, a Jekyll page and resource can be considered the same thing.
+> For the purposes of this plugin, a resource and Jekyll page (specifically its front matter, aka data) can be considered the same thing.
 
 ### Steps
 
-1. Define `_links` to other resources in each Jekyll page's front matter.
+1. Define link objects to other resources in a `_links` field as part of the Jekyll page's front matter (aka data). Every link object should have `title` and `href` fields, but this plugin only needs `href` to work.
+2. Use the embedded resources in the Jekyll page.
 
-  In the following example, Jill has links to her friends Bob and Jack inside of `_links`.
+In the following example, Jill has links to her friends Bob and Jack inside of `_links` defined in the `people/jill.md` page.
 
-  ```yaml
-  # people/jill.md (front matter only)
+```yaml
+# people/jill.md (front matter only)
 
-  title: Jill
-  age: 6
-  _links:
-    friends:
-      - title: Bob
-        href: /people/bob
+title: Jill
+age: 6
+_links:
+  friends:
+    - title: Bob
+      href: /people/bob
 
-      - title: Jack
-        href: /people/jack
-  ```
+    - title: Jack
+      href: /people/jack
+```
 
-2. Use the embedded resources in the Jekyll pages.
+Below is the data that will be available to the `people/jill.md` page during the Jekyll build process. Notice that Jill's friends Bob and Jack are now included in their entirety in `_embedded` and are available to be displayed on the Jill's page.
 
-  The following example is the result of embedding the previous example. Notice that Jill's friends are now included in their entirety in `_embedded`.
+```yaml
+# people/jill.md (front matter only)
 
-  ```yaml
-  # people/jill.md (front matter only)
+title: Jill
+age: 6
+_links:
+  friends:
+    - title: Bob
+      href: /people/bob
 
-  title: Jill
-  age: 6
-  _links:
-    friends:
-      - title: Bob
-        href: /people/bob
+    - title: Jack
+      href: /people/jack
 
-      - title: Jack
-        href: /people/jack
+_embedded:
+  friends:
+    - title: Bob
+      age: 5
+      _links:
+        friends:
+          - title: Jill
+            href: /people/jill
 
-  _embedded:
-    friends:
-      - title: Bob
-        age: 5
-        _links:
-          friends:
-            - title: Jill
-              href: /people/jill
-
-      - title: Jack
-        age: 7
-        _links:
-          friends:
-            - title: Jill
-              href: /people/jill
-  ```
+    - title: Jack
+      age: 7
+      _links:
+        friends:
+          - title: Jill
+            href: /people/jill
+```
 
 ## Contributing
 

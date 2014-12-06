@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.version       = Jekyll::Embed::VERSION
   spec.authors       = ['Greg Scott']
   spec.email         = ['i@gregoryjscott.com']
-  spec.summary       = %q{Uses hypermedia to build Jekyll page data.}
+  spec.summary       = %q{Uses links to build Jekyll page data.}
   spec.homepage      = 'https://github.com/gregoryjscott/jekyll-embed'
   spec.license       = 'MIT'
 

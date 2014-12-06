@@ -1,6 +1,6 @@
 # Jekyll::Embed
 
-Use hypermedia to build Jekyll page data.
+Use links to build Jekyll page data.
 
 ## Installation
 

@@ -9,4 +9,7 @@ _links:
 
     - title: Jack
       href: /people/jack/
+
+    - title: Fake
+      href: /people/fake/
 ---

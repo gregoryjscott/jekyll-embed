@@ -36,13 +36,13 @@ module Jekyll
 
         link_objects.each do |link_object|
           resource = find_resource(link_object['href'])
-          embedded[key] << resource['data']
+          embedded[key] << resource['data'] unless resource.nil?
         end
       end
 
       def embed_single(embedded, key, link_object)
         resource = find_resource(link_object['href'])
-        embedded[key] = resource['data']
+        embedded[key] = resource['data'] unless resource.nil?
       end
 
       def get_embedded(page)
